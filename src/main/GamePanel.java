@@ -45,9 +45,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     // Game State
     public int gameState;
+    public final int titleState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogueState = 3;
+
 
 
     public GamePanel() {
@@ -66,9 +68,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame(){
         assetSetter.setObject();
         assetSetter.setNPC();
-        playMusic(0);
-        stopMusic();
-        gameState = playState;
+//        playMusic(0);
+//        stopMusic();
+        gameState = titleState;
 
     }
 
@@ -133,39 +135,48 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        // tiles
-        tileManager.draw(g2d);
 
-        // objects
-        for (SuperObject object : objects) {
-            if (object != null) {
-                object.draw(g2d, this);
+        // TITLE SCREEN
+        if(gameState == titleState){
+
+            ui.draw(g2d);
+
+        } else {
+            // tiles
+            tileManager.draw(g2d);
+
+            // objects
+            for (SuperObject object : objects) {
+                if (object != null) {
+                    object.draw(g2d, this);
+                }
             }
-        }
 
-        // npc
-        for (Entity npc : npcs) {
-            if (npc != null) {
-                npc.draw(g2d);
+            // npc
+            for (Entity npc : npcs) {
+                if (npc != null) {
+                    npc.draw(g2d);
+                }
             }
+
+            // player
+            player.draw(g2d);
+
+            // ui
+            ui.draw(g2d);
         }
-
-        // player
-        player.draw(g2d);
-
-        // ui
-        ui.draw(g2d);
 
         // debug
         if (keyHandler.debugging) {
 
-        long drawEnd = System.nanoTime();
-        long timePassed = drawEnd - drawStart;
+            long drawEnd = System.nanoTime();
+            long timePassed = drawEnd - drawStart;
 
-        g2d.setColor(Color.white);
-        g2d.drawString("Draw Time: " + timePassed, 10, 400);
-        System.out.println("Draw Time: " + timePassed);
+            g2d.setColor(Color.white);
+            g2d.drawString("Draw Time: " + timePassed, 10, 400);
+            System.out.println("Draw Time: " + timePassed);
         }
+
 
         g2d.dispose();
     }
